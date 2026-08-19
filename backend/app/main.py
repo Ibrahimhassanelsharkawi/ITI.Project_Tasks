@@ -1,7 +1,10 @@
 import os
 
+# Vercel filesystem is read-only except /tmp
+os.environ["HOME"] = "/tmp"
 os.environ["HF_HOME"] = "/tmp/huggingface"
 os.environ["HF_HUB_CACHE"] = "/tmp/huggingface/hub"
+os.environ["HF_XET_CACHE"] = "/tmp/huggingface/xet"
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
@@ -9,7 +12,6 @@ from .schemas import PredictionRequest, PredictionResponse
 from huggingface_hub import hf_hub_download
 import joblib
 import pandas as pd
-
 
 app = FastAPI(
     title="House Price Prediction API",
