@@ -1,3 +1,8 @@
+import os
+
+os.environ["HF_HOME"] = "/tmp/huggingface"
+os.environ["HF_HUB_CACHE"] = "/tmp/huggingface/hub"
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from .schemas import PredictionRequest, PredictionResponse
