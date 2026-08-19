@@ -1,9 +1,9 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from .schemas import PredictionRequest, PredictionResponse
+from huggingface_hub import hf_hub_download
 import joblib
 import pandas as pd
-from pathlib import Path
 
 
 app = FastAPI(
@@ -26,17 +26,16 @@ app.add_middleware(
 
 
 # =========================
-# Load trained model
+# Download trained model from Hugging Face
 # =========================
 
-BASE_DIR = Path(__file__).resolve().parent.parent
-MODEL_PATH = BASE_DIR / "models" / "house_price.pkl"
+MODEL_PATH = hf_hub_download(
+    repo_id="IbrahimHassan2oo5/house-price-model",
+    filename="house_price.pkl",
+    cache_dir="/tmp/huggingface"
+)
 
-if not MODEL_PATH.exists():
-    raise FileNotFoundError(
-        f"Model file not found: {MODEL_PATH}"
-    )
-
+# Load trained model
 model = joblib.load(MODEL_PATH)
 
 
