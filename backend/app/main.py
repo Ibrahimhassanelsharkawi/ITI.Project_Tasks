@@ -13,7 +13,6 @@ app = FastAPI(
     version="1.0.0"
 )
 
-
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -22,41 +21,33 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-
 MODEL_PATH = "/tmp/house_price.pkl"
+MODEL_URL = (
+    "https://huggingface.co/"
+    "IbrahimHassan2oo5/house-price-model/"
+    "resolve/main/house_price.pkl"
+)
 
-if not os.path.exists(MODEL_PATH):
-    model_url = (
-        "https://huggingface.co/"
-        "IbrahimHassan2oo5/house-price-model/"
-        "resolve/main/house_price.pkl"
-    )
-
-    urllib.request.urlretrieve(model_url, MODEL_PATH)
-
-model = joblib.load(MODEL_PATH)
+model = None  # لسه مش متحمّل
 
 
-# =========================
-# Health Check
-# =========================
+def get_model():
+    global model
+    if model is None:
+        if not os.path.exists(MODEL_PATH):
+            urllib.request.urlretrieve(MODEL_URL, MODEL_PATH)
+        model = joblib.load(MODEL_PATH)
+    return model
+
 
 @app.get("/health")
 def health():
-    return {
-        "status": "ok"
-    }
+    return {"status": "ok"}
 
 
-# =========================
-# Prediction
-# =========================
-
-@app.post(
-    "/predict",
-    response_model=PredictionResponse
-)
+@app.post("/predict", response_model=PredictionResponse)
 def predict(data: PredictionRequest):
+    model = get_model()  # يتحمل أول مرة بس
 
     input_data = pd.DataFrame([{
         "carpet_area_sqft": data.carpet_area_sqft,
@@ -72,6 +63,4 @@ def predict(data: PredictionRequest):
 
     prediction = model.predict(input_data)[0]
 
-    return {
-        "predicted_price": float(prediction)
-    }
+    return {"predicted_price": float(prediction)}
