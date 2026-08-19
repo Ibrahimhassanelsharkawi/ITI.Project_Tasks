@@ -1,0 +1,32 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Environment variables
+.env
+.env.*
+
+# Node
+node_modules/
+frontend/dist/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Model files
+backend/models/*.pkl
+backend/models/*.zip
+notebooks/data/*.pkl
+
+# Large dataset
+notebooks/data/house_prices.csv
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
