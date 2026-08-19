@@ -1,15 +1,17 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from .schemas import PredictionRequest, PredictionResponse
+from huggingface_hub import hf_hub_download
 import joblib
 import pandas as pd
-from pathlib import Path
 
 
 app = FastAPI(
     title="House Price Prediction API",
     version="1.0.0"
 )
+
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["http://localhost:5173"],
@@ -19,10 +21,13 @@ app.add_middleware(
 )
 
 
-# Load trained model
-BASE_DIR = Path(__file__).resolve().parent.parent
-MODEL_PATH = BASE_DIR / "models" / "house_price.pkl"
+# Download trained model from Hugging Face
+MODEL_PATH = hf_hub_download(
+    repo_id="IbrahimHassan2oo5/house-price-model",
+    filename="house_price.pkl"
+)
 
+# Load trained model
 model = joblib.load(MODEL_PATH)
 
 
