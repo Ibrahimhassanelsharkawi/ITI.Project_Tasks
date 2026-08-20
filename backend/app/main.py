@@ -21,11 +21,11 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-MODEL_PATH = "/tmp/house_price.pkl"
+MODEL_PATH = "/tmp/house_price_small.pkl"
 MODEL_URL = (
     "https://huggingface.co/"
     "IbrahimHassan2oo5/house-price-model/"
-    "resolve/main/house_price.pkl"
+    "resolve/main/house_price_small.pkl"
 )
 
 model = None  # لسه مش متحمّل
